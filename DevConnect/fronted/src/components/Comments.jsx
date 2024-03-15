@@ -28,11 +28,6 @@ const Comments = ({Comment,username,createdAt,like,userAvatar}) => {
 
             </Flex>
 
-           
-
-
-
-
         </Flex>
         
 
