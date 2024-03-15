@@ -8,7 +8,7 @@ const UserPost = ({ Likes, Replies, postImg, postTitle }) => {
 
     const [liked, setLiked] = useState(false)
     return (
-        <Link to={"markzuckerburg/post/1"}>
+        <Link to={"post/1"}>
             <Flex gap={3} mb={3} py={5}>
                 <Flex flexDirection={"column"} alignItems={"center"} >
                     <Avatar

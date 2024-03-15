@@ -32,7 +32,7 @@ function Userheader() {
 
           <Flex alignItems={"center"} gap={2}>
             <Text fontSize={"small"}> User Name </Text>
-            <Text fontSize={"xs"} bg={"gray.dark"} color={"gray.light"} p={1} borderRadius={"full"}> threads.net</Text>
+            <Text fontSize={"xs"} bg={"gray.400"} color={"gray.light"} p={1} borderRadius={"full"}> threads.net</Text>
           </Flex>
 
         </Box>
@@ -53,7 +53,7 @@ function Userheader() {
 
       </Flex>
 
-      <Text>Co-FOunder ,Executive Chairman of facebook and CEO</Text>
+      <Text>Co-Founder, Executive Chairman of facebook and CEO</Text>
       <Flex w="full" justifyContent={"space-between"} >
         <Flex gap={2} alignItems={"center"}>
           <Text color={"gray.light"} >
