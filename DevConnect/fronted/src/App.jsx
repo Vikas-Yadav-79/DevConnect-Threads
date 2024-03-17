@@ -1,25 +1,35 @@
 import { Button } from '@chakra-ui/button'
 import { Container } from '@chakra-ui/react'
-import { BrowserRouter, Routes, Route, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, } from 'react-router-dom';
 import Header from './components/Header'; // Adjusted import statement
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
+import userAtom from './atoms/userAtom';
+import { useRecoilValue } from 'recoil';
+import LogoutButton from './components/LogoutButton';
+
+
 
 
 function App() {
+
+  const  user = useRecoilValue(userAtom);
 
   return (
 
     <Container maxWidth={"620px"}>
       <Header />
       <Routes>
-        <Route path='/' element={<HomePage/>}></Route>
-        <Route path='/auth' element={<AuthPage/>}></Route>
+        <Route path='/' element={user ? <HomePage/> : <Navigate to={"/auth"} />} ></Route>
+        <Route path='/auth' element={!user ? <AuthPage/> : <Navigate to={"/"}/>}></Route>
         <Route path='/:username' element={<UserPage />}></Route>
         <Route path='/:username/post/:pid' element={<PostPage />}></Route>
       </Routes>
+
+     {user && <LogoutButton />}
+      
     </Container>
   )
 }

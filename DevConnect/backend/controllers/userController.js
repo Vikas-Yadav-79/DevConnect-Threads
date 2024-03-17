@@ -11,7 +11,7 @@ const signUpUser = async (req, res) => {
         const user = await User.findOne({ $or: [{ email }, { password }] });
 
         if (user) {
-            return res.status(400).json({ message: "User Already exists :" });
+            return res.status(400).json({ error: "User Already exists :" });
         }
 
 
@@ -43,7 +43,7 @@ const signUpUser = async (req, res) => {
         }
         else {
             res.status(400).json({
-                message: " , Error occured creating newUser"
+                error: " , Error occured creating newUser"
             })
         }
 
@@ -52,7 +52,7 @@ const signUpUser = async (req, res) => {
 
     catch (err) {
 
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
         console.log("Error ocuured while sign Up " + err.message)
 
     }
@@ -108,10 +108,10 @@ const followUnFollowUser = async (req, res) => {
 
         if (id === req.user._id.toString())
         {
-            return res.status(400).json({ message: "You can't Follow , UnFollow Yourself " })
+            return res.status(400).json({ error: "You can't Follow , UnFollow Yourself " })
         } 
         if (!userToModify || !currentUser) {
-            return res.status(400).json({ message: "User Not Found" })
+            return res.status(400).json({ error: "User Not Found" })
         }
         const isFollowing = currentUser.following.includes(id);
         if (isFollowing) {
@@ -167,13 +167,13 @@ const updateUser = async (req, res) => {
         let userToUpdate = await User.findById(userId);
         if (!userToUpdate) {
             return res.status(404).json({
-                message: "User Not Found"
+                error: "User Not Found"
             });
         }
 
         if (userId.toString() !== req.params.id) {
             return res.status(404).json({
-                message: "You cannot update Others Profile"
+                error: "You cannot update Others Profile"
             });
         }
 
@@ -193,7 +193,7 @@ const updateUser = async (req, res) => {
 
         res.status(200).json({ message: "User updated successfully", user: userToUpdate });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ error: err.message });
         console.log("Error occurred while updating: " + err.message);
     }
 };
@@ -206,7 +206,7 @@ const getUserProfile = async(req,res) =>{
     try{
         const user = await User.findOne({username}).select("-password").select("-updatedAt");
         if(!user){
-            return res.status(400).json({message:"User Not found ! "});
+            return res.status(400).json({error:"User Not found ! "});
         }
         else{
             res.status(200).json(user)
@@ -214,7 +214,7 @@ const getUserProfile = async(req,res) =>{
     }
     catch(err){
 
-        res.status(500).json({message:err.message})
+        res.status(500).json({error:err.message})
         console.log("Erro While getting user Profile !" + err.message);
 
     }
