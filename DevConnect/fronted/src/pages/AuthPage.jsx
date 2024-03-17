@@ -11,7 +11,7 @@ function AuthPage() {
         <>
            
            {
-            authScreenAtom === "Login" ? <LoginCard/> : <SignupCard/>
+            authScreenState === "login" ? <LoginCard/> : <SignupCard/>
            }
 
 
