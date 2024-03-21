@@ -13,24 +13,57 @@ import {
 import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
+import { useImagePreview } from "../hooks/useImagePreview";
+import useShowToast from "../hooks/useShowToast";
 
 export default function UpdateProfilePage() {
-    const [User,setUser] = useRecoilState(userAtom);
+    const [user,setuser] = useRecoilState(userAtom);
+    const showToast = useShowToast();
     const [inputs, setInputs] = useState(
         {
-
-            name: User.name,
-            username: User.username,
-            email: User.email,
-            bio: User.bio,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
             password:"",
         }
-
-
     )
-    const fileRef = useRef(null);
+    const fileRef = useRef(null)
+    const {handleImageChange,imageUrl} = useImagePreview();
+
+    const handleSubmit = async (e) =>{
+        e.preventDefault();
+
+        // console.log(User)
+        try {
+			const res = await fetch(`/api/users/update/${user._id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ ...inputs, profilePic: imageUrl }),
+			});
+			const data = await res.json(); // updated user object
+
+			if (data.error) {
+				showToast("Error", data.error, "error");
+				return;
+			}
+
+            showToast("Success", "Profile Updated Succesfully","success" );
+
+            setuser(data);
+            localStorage.setItem("user-threads", JSON.stringify(data));
+
+
+
+        }
+        catch(err){
+            showToast("Error",err,"error")
+        }
+    };
     return (
-        <form >
+        <form onSubmit={handleSubmit}>
             <Flex align={"center"} justify={"center"} my={6}>
                 <Stack
                     spacing={4}
@@ -47,13 +80,14 @@ export default function UpdateProfilePage() {
                     <FormControl id='userName'>
                         <Stack direction={["column", "row"]} spacing={6}>
                             <Center>
-                                <Avatar size='xl' boxShadow={"md"} src={User.profilePic} />
+                                <Avatar size='xl' boxShadow={"md"} src={imageUrl || user.profilePic} />
                             </Center>
                             <Center w='full'>
-                                <Button w='full' onClick={() =>{fileRef.current.click()}} >
+                                <Button w='full' onClick= {() => {fileRef.current.click()}}  >
                                     Change Avatar
+                                    
                                 </Button>
-                                <Input type='file'  hidden  ref={fileRef}/>
+                                <Input type='file' hidden  ref={fileRef}  onChange={handleImageChange}/>
                             </Center>
                         </Stack>
                     </FormControl>

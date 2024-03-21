@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const userRoutes = require ('./routes/userRoutes' );
 const postRoutes = require ('./routes/postRoutes' );
 
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 dotenv.config();
@@ -15,10 +16,18 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 
-app.use(express.json()); // to parse json data in the body
+//Middleware
 
+app.use(express.json()); // to parse json data in the body
 app.use(express.urlencoded({  extended: true})); // to handle the url encoded data
 app.use(cookieParser());
+
+
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:process.env.CLOUDINARY_API_KEY,
+    api_secret:process.env.CLOUDINARY_API_SECRET
+})
 
 
 //Routes 
