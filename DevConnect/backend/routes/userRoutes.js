@@ -6,7 +6,7 @@ const protectRoute = require('../middleware/protectRoute');
 const router = express.Router();
 
 
-router.get('/profile/:id', getUserProfile)
+router.get('/profile/:username', getUserProfile)
 
 router.post('/signup', signUpUser)
 
@@ -16,7 +16,7 @@ router.post('/logout',logoutUser)
 
 router.post('/follow/:id',protectRoute,followUnFollowUser)
 
-router.post('/update/:id',protectRoute,updateUser)
+router.put('/update/:id',protectRoute,updateUser)
 
 
 module.exports = router;

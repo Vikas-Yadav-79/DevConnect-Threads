@@ -4,6 +4,7 @@ const cookie = require('cookie-parser')
 const generateTokenAndSetCookie = require('../utilis/helpers/generateTokenAndSetCookie');
 const { json } = require('express');
 const { use } = require('../routes/userRoutes');
+const cloudinary = require('cloudinary').v2;
 const signUpUser = async (req, res) => {
     try {
 
@@ -38,6 +39,8 @@ const signUpUser = async (req, res) => {
                     name: newUser.name,
                     email: newUser.email,
                     username: newUser.username,
+                    bio:newUser.bio,
+                    profilePic:newUser.profilePic
                 }
             )
         }
@@ -160,7 +163,8 @@ const followUnFollowUser = async (req, res) => {
 
 
 const updateUser = async (req, res) => {
-    const { username, name, email, password, profilePic, bio } = req.body;
+    const { username, name, email, password, bio } = req.body;
+    let {profilePic} = req.body
     const userId = req.user._id;
 
     try {
@@ -183,6 +187,16 @@ const updateUser = async (req, res) => {
             userToUpdate.password = hashedPassword;
         }
 
+        if(profilePic){
+            if(userToUpdate.profilePic){
+                await cloudinary.uploader.destroy(userToUpdate.profilePic.split("/").pop().split(".")[0]);
+
+            }
+           const uploadrespones=await cloudinary.uploader.upload(profilePic)
+           profilePic = uploadrespones.secure_url;
+
+        }
+
         userToUpdate.name = name || userToUpdate.name;
         userToUpdate.email = email || userToUpdate.email;
         userToUpdate.username = username || userToUpdate.username;
@@ -201,16 +215,14 @@ const updateUser = async (req, res) => {
 
 const getUserProfile = async(req,res) =>{
 
-    const {username} = req.params;
-
+    
     try{
+        const {username} = req.params;
         const user = await User.findOne({username}).select("-password").select("-updatedAt");
         if(!user){
-            return res.status(400).json({error:"User Not found ! "});
+            return res.status(404).json({error:"User Not found  ! "});
         }
-        else{
             res.status(200).json(user)
-        }
     }
     catch(err){
 

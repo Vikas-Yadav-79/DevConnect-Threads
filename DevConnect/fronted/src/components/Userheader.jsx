@@ -6,23 +6,20 @@ import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
 import { Avatar } from '@chakra-ui/react'
 import React from 'react'
+import useShowToast from '../hooks/useShowToast';
 
 function Userheader() {
 
 
-  const toast = useToast()
+  const showToast = useShowToast()
   const copyUrl = () => {
     const currenturl = window.location.href;
     navigator.clipboard.writeText(currenturl).then(
-      toast({
-        title: 'Account created.',
-        description: "Link Copied Successfully !",
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
+      showToast('Account created.', "Link Copied Successfully !", 'success')
     )
   }
+
+  
   return (
     <VStack gap="4" alignItems={"start"}>
       <Flex justifyContent={"space-between"} w={"full"} gap={4}>
@@ -43,8 +40,8 @@ function Userheader() {
             src='/zuck-avatar.png'
             size={
               {
-                base : "lg",
-                md :"xl",
+                base: "lg",
+                md: "xl",
               }
             }
           />
@@ -67,23 +64,23 @@ function Userheader() {
 
 
         <Flex >
-          
-        <Box className='icon-container'>
-          <BsInstagram size={24} cursor={"pointer"} />
-        </Box>
-        <Box className='icon-container'>
-          <Menu>
-            <MenuButton>
-              <CgMoreO size={24} cursor={"pointer"} />
-            </MenuButton>
-            <Portal>
-              <MenuList bg={"gray.dark"}>
-                <MenuItem bg={"gray.dark"} onClick={copyUrl}> Copy Link</MenuItem>
-              </MenuList>
-            </Portal>
-          </Menu>
 
-        </Box>
+          <Box className='icon-container'>
+            <BsInstagram size={24} cursor={"pointer"} />
+          </Box>
+          <Box className='icon-container'>
+            <Menu>
+              <MenuButton>
+                <CgMoreO size={24} cursor={"pointer"} />
+              </MenuButton>
+              <Portal>
+                <MenuList bg={"gray.dark"}>
+                  <MenuItem bg={"gray.dark"} onClick={copyUrl}> Copy Link</MenuItem>
+                </MenuList>
+              </Portal>
+            </Menu>
+
+          </Box>
         </Flex>
       </Flex>
 
@@ -96,7 +93,7 @@ function Userheader() {
         <Flex flex={1} borderBottom={"1.px solid  white"} justifyContent={"center"} pb={6} cursor={"pointer"} >
           <Text fontWeight={"bold"}>Replies</Text>
         </Flex>
-        
+
       </Flex>
 
     </VStack>
