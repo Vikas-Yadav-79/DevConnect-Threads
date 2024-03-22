@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import useShowToast from './useShowToast';
 
-export const useImagePreview = () => {
+ export const  useImagePreview = () => {
 
 
     const [imageUrl,setImageUrl] = useState(null);
@@ -30,5 +30,5 @@ export const useImagePreview = () => {
         }
     };
 
-  return {handleImageChange,imageUrl}
+  return {handleImageChange,imageUrl,setImageUrl}
 }
