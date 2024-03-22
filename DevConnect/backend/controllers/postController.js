@@ -1,6 +1,8 @@
 const Post = require('../models/postModel');
 const User = require('../models/userModel');
 const { use } = require('../routes/postRoutes');
+const cloudinary = require('cloudinary').v2;
+
 
 const createPost = async (req, res) => {
     try {
@@ -25,11 +27,12 @@ const createPost = async (req, res) => {
             return res.status(400).json({ error: `Text must be less than ${maxLength} characters` });
         }
 
-        // if (img) {
-        //     const uploadedResponse = await cloudinary.uploader.upload(img);
-        //     img = uploadedResponse.secure_url;
-        // }
+        if(img){
+            const uploadedResponse = await cloudinary.uploader.upload(img);
+            img = uploadedResponse.secure_url;
+        }
 
+        
         const newPost = new Post({ postedBy, text, img });
         await newPost.save();
 
@@ -72,7 +75,7 @@ const deletePost = async (req,res) =>{
 
         if(post.postedBy.toString() !== req.user._id.toString()){
             res.status(404).json({
-                message: "Unautorised acess !"
+                error: "Unautorised acess !"
             })
         }
 
@@ -86,7 +89,7 @@ const deletePost = async (req,res) =>{
     }
     catch(err){
 
-        res.status(500).json({message: err.message});
+        res.status(500).json({error: err.message});
         console.log("Error occured while deleting Post !" , err.message);
 
     }
@@ -156,7 +159,7 @@ const getFeedPosts = async (req,res) => {
 
         const user = await User.findById(userId);
         if(!user){
-            res.status(400).json({message:"User Not Found !"})
+            res.status(400).json({error:"User Not Found !"})
         }
         const following = user.following;
         const feedPost = await Post.find({ postedBy : { $in : following } } ).sort({createdAt:-1});
@@ -164,7 +167,7 @@ const getFeedPosts = async (req,res) => {
     }
     catch(err){
         res.status(500).json({
-            message: err.message
+            error: err.message
         })
         console.log("error occured in geting feed posts !" , err.message)
 
