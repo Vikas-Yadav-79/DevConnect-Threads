@@ -30,9 +30,14 @@ export default function UpdateProfilePage() {
     )
     const fileRef = useRef(null)
     const {handleImageChange,imageUrl} = useImagePreview();
+    const [updating,setUpdating] = useState(false)
+
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
+
+        if(updating) return;
+        setUpdating(true)
 
         // console.log(User)
         try {
@@ -60,6 +65,9 @@ export default function UpdateProfilePage() {
         }
         catch(err){
             showToast("Error",err,"error")
+        }
+        finally{
+            setUpdating(false)
         }
     };
     return (
@@ -176,6 +184,7 @@ export default function UpdateProfilePage() {
                                 bg: "green.500",
                             }}
                             type='submit'
+                            isLoading={updating}
 
                         >
                             Submit
