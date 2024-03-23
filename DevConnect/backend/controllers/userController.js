@@ -4,6 +4,7 @@ const cookie = require('cookie-parser')
 const generateTokenAndSetCookie = require('../utilis/helpers/generateTokenAndSetCookie');
 const { json } = require('express');
 const { use } = require('../routes/userRoutes');
+const { default: mongoose } = require('mongoose');
 const cloudinary = require('cloudinary').v2;
 const signUpUser = async (req, res) => {
     try {
@@ -217,8 +218,17 @@ const getUserProfile = async(req,res) =>{
 
     
     try{
-        const {username} = req.params;
-        const user = await User.findOne({username}).select("-password").select("-updatedAt");
+        let user;
+        const  {query} = req.params;
+        if(mongoose.Types.ObjectId.isValid(query)){
+            user = await User.findOne({_id:query}).select("-password").select("-updatedAt");
+
+        }
+        else{
+            user = await User.findOne({username:query}).select("-password").select("-updatedAt");
+
+
+        }
         if(!user){
             return res.status(404).json({error:"User Not found  ! "});
         }
