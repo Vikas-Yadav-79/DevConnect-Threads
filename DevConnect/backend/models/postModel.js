@@ -39,6 +39,9 @@ const postSchema = mongoose.Schema(
                 },
                 username: {
                     type: String,
+                },
+                img_rep:{
+                    type:String
                 }
             }
         ]

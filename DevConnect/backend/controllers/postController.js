@@ -128,6 +128,7 @@ const likeUnlikePost = async (req, res) => {
 const replyToPost = async (req, res) => {
 	try {
 		const { text } = req.body;
+        let {img_rep} = req.body;
 		const postId = req.params.id;
 		const userId = req.user._id;
 		const userProfilePic = req.user.profilePic;
@@ -142,7 +143,12 @@ const replyToPost = async (req, res) => {
 			return res.status(404).json({ error: "Post not found" });
 		}
 
-		const reply = { userId, text, userProfilePic, username };
+        if(img_rep){
+            const uploadedResponse = await cloudinary.uploader.upload(img_rep);
+            img_rep=  uploadedResponse.secure_url
+        }
+
+		const reply = { userId, text, userProfilePic, username ,img_rep};
 
 		post.replies.push(reply);
 		await post.save();
@@ -175,5 +181,21 @@ const getFeedPosts = async (req,res) => {
 
 }
 
+const getUserPosts = async (req, res) => {
+	const { username } = req.params;
+	try {
+		const user = await User.findOne({ username });
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
 
-module.exports = { createPost ,getPost,deletePost,likeUnlikePost,replyToPost ,getFeedPosts};
+		const posts = await Post.find({ postedBy: user._id }).sort({ createdAt: -1 });
+
+		res.status(200).json(posts);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+};
+
+
+module.exports = { createPost ,getPost,deletePost,likeUnlikePost,replyToPost ,getFeedPosts,getUserPosts};

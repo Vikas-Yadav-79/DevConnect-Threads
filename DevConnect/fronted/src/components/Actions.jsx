@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
 	Box,
 	Button,
@@ -11,16 +11,28 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+    CloseButton,
+    Image,
 	ModalOverlay,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import userAtom from '../atoms/userAtom'
 import { useRecoilValue } from 'recoil'
+import { useImagePreview } from "../hooks/useImagePreview";
 import useShowToast from '../hooks/useShowToast'
-
+import { BsFillImageFill } from "react-icons/bs";
 
 const Actions = ({post:post_}) => {
+
+   const imageRef = useRef(null);
+   const { handleImageChange, imageUrl, setImageUrl } = useImagePreview();
+
+
+
+
+
+
     const user = useRecoilValue(userAtom) //currentUser Logged in
     const [post,setPost] = useState(post_)
 
@@ -90,19 +102,20 @@ const Actions = ({post:post_}) => {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ text: reply }),
+				body: JSON.stringify({ text: reply,img_rep:imageUrl }),
             })
             
             const data = await res.json()
 			if (data.error) return showToast("Error", data.error, "error");
             setPost({
                 ...post,
-                replies: [...post.replies,data.reply]
+                replies: [...post.replies,data.reply,data.imageUrl]
             })
 
             showToast("Success", "Reply posted successfully", "success");
 			onClose();
 			setReply("");
+            setImageUrl("");
 
         } catch (error) {
             showToast("Error", error.message, "error");
@@ -188,7 +201,39 @@ const Actions = ({post:post_}) => {
 								value={reply}
 								onChange={(e) => setReply(e.target.value)}
 							/>
+                            <Input
+                                type="file"
+                                hidden
+                                ref={imageRef}
+                                onChange={handleImageChange}
+                            />
+                            <BsFillImageFill
+                                style={{ marginLeft: "6px", cursor: "pointer",marginTop:"20px" }}
+                                size={20}
+                                onClick={() => imageRef.current.click()}
+                            />
 						</FormControl>
+
+                        {
+                            imageUrl && (
+                                <Flex mt={5} w={"full"} position={"relative"}>
+                                    <Image
+                                        src={imageUrl}
+                                        alt="Post Image"
+                                    />
+                                    <CloseButton
+                                        onClick={() => {
+                                            setImageUrl("");
+                                        }}
+                                        bg={"gray.800"}
+                                        position={"absolute"}
+                                        top={2}
+                                        right={2}
+                                    />
+
+                                </Flex>
+                            )
+                        }
 					</ModalBody>
 
 					<ModalFooter>
