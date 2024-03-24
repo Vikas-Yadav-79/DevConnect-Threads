@@ -4,6 +4,7 @@ import UserPost from '../components/UserPost'
 import { useParams } from 'react-router-dom'
 import useShowToast from '../hooks/useShowToast'
 import { Flex ,Spinner} from '@chakra-ui/react'
+import Post from '../components/Post'
 
 function UserPage() {
 
@@ -13,6 +14,7 @@ function UserPage() {
 
   const { username } = useParams()
 	const [fetchingPosts, setFetchingPosts] = useState(true);
+  const [posts,setPosts] = useState([])
 
 
   useEffect(() =>{
@@ -21,7 +23,6 @@ function UserPage() {
 
         const res = await fetch(`/api/users/profile/${username}`);
 				const data = await res.json();
-        console.log(data);
         if(data.error){
           showToast("Error" , data.error,"error")
           return;
@@ -37,8 +38,33 @@ function UserPage() {
         setFetchingPosts(false)
       }
     };
+    const getPost = async () =>{
+      setFetchingPosts(true)
+      try {
+
+        const res = await fetch(`/api/posts/user/${username}`)
+        const data = await res.json()
+        if(data.error){
+          showToast("Error" , data.error,"error")
+          return;
+
+        }
+        console.log(data)
+        setPosts(data);
+
+        
+      } catch (error) {
+        showToast("Error" , error,"error")
+        setPosts([])
+        
+      }finally{
+        setFetchingPosts(false)
+      }
+
+    }
 
     getUser();
+    getPost();
 
   },[username,showToast]);
 
@@ -54,15 +80,34 @@ function UserPage() {
 
 
 
+
   return (
     <>
       <Userheader user={user} />
-      <UserPost Likes={1200} Replies={481} postImg="/post1.png" postTitle="Let's talk about threads"/>
+
+      {
+        !fetchingPosts && posts.length ===0 && <h1>User has no Post Yet</h1>
+      }
+      {
+        fetchingPosts && (
+          <Flex justifyContent={"center"}>
+            <Spinner size={"xl"}/>
+
+          </Flex>
+        )
+      }
+
+      {
+        posts && posts.map((post) =>(
+          <Post key={post._id} post={post} postedBy={post.postedBy}/>
+        ))
+      }
+      {/* <UserPost Likes={1200} Replies={481} postImg="/post1.png" postTitle="Let's talk about threads"/>
       <UserPost Likes={451} Replies={12} postImg="/post2.png" postTitle="Nice Tutorial"/>
 
       <UserPost Likes={321} Replies={989} postImg="/post3.png" postTitle="I Love this Guy"/>
 
-      <UserPost Likes={212} Replies={56}  postTitle="I got Nothing to post Lazy thread here:"/>
+      <UserPost Likes={212} Replies={56}  postTitle="I got Nothing to post Lazy thread here:"/> */}
 
       
     </>

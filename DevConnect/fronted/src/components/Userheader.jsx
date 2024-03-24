@@ -16,7 +16,7 @@ const Userheader = ({ user }) => {
 
   const showToast = useShowToast()
   const currentUser = useRecoilValue(userAtom); // loggedin user
-  const [following,setfollowing] = useState(user.followers.includes(currentUser._id))
+  const [following,setfollowing] = useState(user.followers.includes(currentUser?._id))
   const [updating,setUpdating] = useState(false)
 
 
@@ -47,7 +47,7 @@ const Userheader = ({ user }) => {
         
       }
       else{
-        user.followers.push(currentUser._id)
+        user.followers.push(currentUser?._id)
         showToast("",`You followed ${user.name}`,"success")
         
       }
@@ -105,7 +105,7 @@ const Userheader = ({ user }) => {
           {
             !user.profilePic && (
               < Avatar
-                name='Mark Zuckerberg '
+                name={user.name}
                 src='/zuck-avatar.png'
                 size={
                   {
@@ -144,16 +144,10 @@ const Userheader = ({ user }) => {
 
         )
       }
-      
-
-
-      
-
-      
       <Flex w="full" justifyContent={"space-between"} >
         <Flex gap={2} alignItems={"center"}>
           <Text color={"gray.light"} >
-            {user.followers.length} Followers
+            {user.followers.length} followers
           </Text>
           <Box bg={"gray.light"} borderRadius={"full"} w={1} h={1}> </Box>
           <Link color={"gray.light"}>Instagram.com</Link>
