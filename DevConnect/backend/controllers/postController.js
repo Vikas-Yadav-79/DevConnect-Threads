@@ -52,7 +52,7 @@ const getPost = async (req, res) => {
             return res.status(404).json({ error: "Post not found" });
         }
 
-        res.status(200).json({ post });
+        res.status(200).json( post );
     } catch (err) {
         res.status(500).json({ error: err.message });
         console.error("Error fetching post:", err);
@@ -77,6 +77,10 @@ const deletePost = async (req,res) =>{
             res.status(404).json({
                 error: "Unautorised acess !"
             })
+        }
+        if(post.img){
+            img_id = post.img.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(img_id)
         }
 
         await Post.findByIdAndDelete(req.params.id)
