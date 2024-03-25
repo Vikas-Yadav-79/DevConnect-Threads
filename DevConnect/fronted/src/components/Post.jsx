@@ -5,16 +5,24 @@ import { Link, useNavigate } from 'react-router-dom'
 import Actions from './Actions'
 import useShowToast from '../hooks/useShowToast'
 import { formatDistanceToNow } from "date-fns";
+import {DeleteIcon} from "@chakra-ui/icons"
+import { useRecoilValue } from 'recoil'
+import userAtom from '../atoms/userAtom'
 
 const Post = ({ post, postedBy }) => {
 
     const [liked, setLiked] = useState(false)
     const showToast = useShowToast();
     const [user, setUser] = useState(null)
-    const navigate = useNavigate();;
+    const currentUser = useRecoilValue(userAtom)
+    const navigate = useNavigate();
+    
 
+
+    const randomNumber = Math.floor(Math.random() * 10) + 1;
     useEffect(() => {
 
+        
         const getUser = async () => {
             try {
 
@@ -32,8 +40,32 @@ const Post = ({ post, postedBy }) => {
                 setUser(null);
             }
         }
+        
         getUser()
     }, [postedBy, showToast])
+
+    const handleDeletePost = async (e) =>{
+        try {
+            e.preventDefault()
+            if(!window.confirm("Are You Sure You Want To Delete This Post")) return;
+            const res = await fetch(`/api/posts/${post._id}`,
+            {method:"DELETE"}
+            )
+            const data = await res.json()
+
+            if (data.error) {
+                showToast("Error", data.error, "error")
+                return;
+            }
+            showToast("Success","Post Deleted Succesfully","success");
+
+
+            
+        } catch (error) {
+            showToast("Error", err, "error")
+            
+        }
+    }
 
     if (!user) return null;
     return (
@@ -104,11 +136,15 @@ const Post = ({ post, postedBy }) => {
 
                         <Flex alignItems={"center"} gap={4}>
                         <Text fontSize={"sm"} width={36} textAlign={"right"} color={"gray.light"}>
-								{post.createdAt? formatDistanceToNow(new Date(post.createdAt)) + " ago" :"1d ago"} 
+								{post.createdAt? formatDistanceToNow(new Date(post.createdAt)) + " ago" :randomNumber + " day ago"} 
                                
 							</Text>
-                            <BsThreeDots />
 
+                            {
+                                currentUser?._id === user._id && (<DeleteIcon  marginLeft={3} boxSize={6} onClick={handleDeletePost} />
+                                )
+                            }
+                            
                         </Flex>
 
 

@@ -1,21 +1,21 @@
 import React, { useRef, useState } from 'react'
 import {
-	Box,
-	Button,
-	Flex,
-	FormControl,
-	Input,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
+    Box,
+    Button,
+    Flex,
+    FormControl,
+    Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
     CloseButton,
     Image,
-	ModalOverlay,
-	Text,
-	useDisclosure,
+    ModalOverlay,
+    Text,
+    useDisclosure,
 } from "@chakra-ui/react";
 import userAtom from '../atoms/userAtom'
 import { useRecoilValue } from 'recoil'
@@ -23,10 +23,10 @@ import { useImagePreview } from "../hooks/useImagePreview";
 import useShowToast from '../hooks/useShowToast'
 import { BsFillImageFill } from "react-icons/bs";
 
-const Actions = ({post:post_}) => {
+const Actions = ({ post: post_ }) => {
 
-   const imageRef = useRef(null);
-   const { handleImageChange, imageUrl, setImageUrl } = useImagePreview();
+    const imageRef = useRef(null);
+    const { handleImageChange, imageUrl, setImageUrl } = useImagePreview();
 
 
 
@@ -34,60 +34,60 @@ const Actions = ({post:post_}) => {
 
 
     const user = useRecoilValue(userAtom) //currentUser Logged in
-    const [post,setPost] = useState(post_)
+    const [post, setPost] = useState(post_)
 
-    const [liked,setLiked] = useState(post.likes.includes(user?._id))
-    const [liking,setLiking] = useState(false)
-    const [isReplying,setIsReplying] = useState(false)
+    const [liked, setLiked] = useState(post_.likes.includes(user?._id))
+    const [liking, setLiking] = useState(false)
+    const [isReplying, setIsReplying] = useState(false)
 
-    const [reply,setReply] = useState("")
+    const [reply, setReply] = useState("")
 
     const showToast = useShowToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const handleLikeAndUnlike = async() =>{
-        if(!user) return showToast('Error',"You Must logged in to like the post !","error")
-        if(liking) return;
+    const handleLikeAndUnlike = async () => {
+        if (!user) return showToast('Error', "You Must logged in to like the post !", "error")
+        if (liking) return;
         setLiking(true)
 
         try {
-         const res = await fetch("/api/posts/like/"+post._id,{
-            method:"PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-         });
-         const data =  await res.json()
-         if(data.error){
-            showToast("Error",data.error,'error')
-            return;
-         }
-         console.log(data);
+            const res = await fetch("/api/posts/like/" + post._id, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await res.json()
+            if (data.error) {
+                showToast("Error", data.error, 'error')
+                return;
+            }
+            console.log(data);
 
-         if(!liked){
-            setPost({
-                ...post,
-                likes:[
-                ...post.likes,
-                user._id
-                ]
-            })
-         }
-         else{
-            setPost({
-                ...post,
-               likes: post.likes.filter(id => id !== user._id)
-            })
-         }
-         setLiked(!liked)
+            if (!liked) {
+                setPost({
+                    ...post,
+                    likes: [
+                        ...post.likes,
+                        user._id
+                    ]
+                })
+            }
+            else {
+                setPost({
+                    ...post,
+                    likes: post.likes.filter(id => id !== user._id)
+                })
+            }
+            setLiked(!liked)
 
-            
+
         } catch (error) {
 
-            showToast("Error",error,'error')
-            
+            showToast("Error", error, 'error')
+
         }
-        finally{
+        finally {
             setLiking(false)
         }
 
@@ -95,33 +95,35 @@ const Actions = ({post:post_}) => {
     }
 
     const handleReply = async () => {
+        if (!user) return showToast("Error", "You must be logged in to reply to a post", "error");
+		if (isReplying) return;
         setIsReplying(true)
         try {
-            const res = await fetch("/api/posts/reply/"+post._id,{
+            const res = await fetch("/api/posts/reply/" + post._id, {
                 method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ text: reply,img_rep:imageUrl }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ text: reply, img_rep: imageUrl }),
             })
-            
+
             const data = await res.json()
-			if (data.error) return showToast("Error", data.error, "error");
+            if (data.error) return showToast("Error", data.error, "error");
             setPost({
                 ...post,
-                replies: [...post.replies,data.reply,data.imageUrl]
+                replies: [...post.replies, data.reply, data.imageUrl]
             })
 
             showToast("Success", "Reply posted successfully", "success");
-			onClose();
-			setReply("");
+            onClose();
+            setReply("");
             setImageUrl("");
 
         } catch (error) {
             showToast("Error", error.message, "error");
-            
+
         }
-        finally{
+        finally {
             setIsReplying(false)
         }
 
@@ -170,37 +172,30 @@ const Actions = ({post:post_}) => {
 
                 <RepostSVG />
                 <ShareSVG />
+            </Flex>
 
-                
+            <Flex gap={2} alignItems={"center"} >
+                <Text color={"gray.light"} fontSize={"sm"}> {post.replies.length} replies</Text>
+                <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
 
-              
-
-                </Flex>
-
-
-                
-                <Flex gap={2} alignItems={"center"} >
-                        <Text color={"gray.light"} fontSize={"sm"}> {post.replies.length} replies</Text>
-                        <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
-
-                        <Text color={"gray.light"} fontSize={"sm"}> {post.likes.length} Likes</Text>
+                <Text color={"gray.light"} fontSize={"sm"}> {post.likes.length} Likes</Text>
 
 
-                </Flex>
+            </Flex>
 
 
-                <Modal isOpen={isOpen} onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader></ModalHeader>
-					<ModalCloseButton />
-					<ModalBody pb={6}>
-						<FormControl>
-							<Input
-								placeholder='Reply goes here..'
-								value={reply}
-								onChange={(e) => setReply(e.target.value)}
-							/>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader></ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <FormControl>
+                            <Input
+                                placeholder='Reply goes here..'
+                                value={reply}
+                                onChange={(e) => setReply(e.target.value)}
+                            />
                             <Input
                                 type="file"
                                 hidden
@@ -208,11 +203,11 @@ const Actions = ({post:post_}) => {
                                 onChange={handleImageChange}
                             />
                             <BsFillImageFill
-                                style={{ marginLeft: "6px", cursor: "pointer",marginTop:"20px" }}
+                                style={{ marginLeft: "6px", cursor: "pointer", marginTop: "20px" }}
                                 size={20}
                                 onClick={() => imageRef.current.click()}
                             />
-						</FormControl>
+                        </FormControl>
 
                         {
                             imageUrl && (
@@ -234,24 +229,17 @@ const Actions = ({post:post_}) => {
                                 </Flex>
                             )
                         }
-					</ModalBody>
+                    </ModalBody>
 
-					<ModalFooter>
-						<Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
-							Reply
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+                    <ModalFooter>
+                        <Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
+                            Reply
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </Flex>
 
-
-
-
-
-
-               
-            </Flex>
-       
 
     )
 }
@@ -259,57 +247,57 @@ const Actions = ({post:post_}) => {
 export default Actions;
 
 
-const RepostSVG = () =>{
+const RepostSVG = () => {
 
-    return(
+    return (
         <svg
-                    aria-label='Repost'
-                    color='currentColor'
-                    fill='currentColor'
-                    height='20'
-                    role='img'
-                    viewBox='0 0 24 24'
-                    width='20'
-                >
-                    <title>Repost</title>
-                    <path
-                        fill=''
-                        d='M19.998 9.497a1 1 0 0 0-1 1v4.228a3.274 3.274 0 0 1-3.27 3.27h-5.313l1.791-1.787a1 1 0 0 0-1.412-1.416L7.29 18.287a1.004 1.004 0 0 0-.294.707v.001c0 .023.012.042.013.065a.923.923 0 0 0 .281.643l3.502 3.504a1 1 0 0 0 1.414-1.414l-1.797-1.798h5.318a5.276 5.276 0 0 0 5.27-5.27v-4.228a1 1 0 0 0-1-1Zm-6.41-3.496-1.795 1.795a1 1 0 1 0 1.414 1.414l3.5-3.5a1.003 1.003 0 0 0 0-1.417l-3.5-3.5a1 1 0 0 0-1.414 1.414l1.794 1.794H8.27A5.277 5.277 0 0 0 3 9.271V13.5a1 1 0 0 0 2 0V9.271a3.275 3.275 0 0 1 3.271-3.27Z'
-                    ></path>
-                </svg>
+            aria-label='Repost'
+            color='currentColor'
+            fill='currentColor'
+            height='20'
+            role='img'
+            viewBox='0 0 24 24'
+            width='20'
+        >
+            <title>Repost</title>
+            <path
+                fill=''
+                d='M19.998 9.497a1 1 0 0 0-1 1v4.228a3.274 3.274 0 0 1-3.27 3.27h-5.313l1.791-1.787a1 1 0 0 0-1.412-1.416L7.29 18.287a1.004 1.004 0 0 0-.294.707v.001c0 .023.012.042.013.065a.923.923 0 0 0 .281.643l3.502 3.504a1 1 0 0 0 1.414-1.414l-1.797-1.798h5.318a5.276 5.276 0 0 0 5.27-5.27v-4.228a1 1 0 0 0-1-1Zm-6.41-3.496-1.795 1.795a1 1 0 1 0 1.414 1.414l3.5-3.5a1.003 1.003 0 0 0 0-1.417l-3.5-3.5a1 1 0 0 0-1.414 1.414l1.794 1.794H8.27A5.277 5.277 0 0 0 3 9.271V13.5a1 1 0 0 0 2 0V9.271a3.275 3.275 0 0 1 3.271-3.27Z'
+            ></path>
+        </svg>
     )
 
 }
 
-const ShareSVG = () =>{
-    return(
+const ShareSVG = () => {
+    return (
         <svg
-        aria-label='Share'
-        color=''
-        fill='rgb(243, 245, 247)'
-        height='20'
-        role='img'
-        viewBox='0 0 24 24'
-        width='20'
-    >
-        <title>Share</title>
-        <line
-            fill='none'
-            stroke='currentColor'
-            strokeLinejoin='round'
-            strokeWidth='2'
-            x1='22'
-            x2='9.218'
-            y1='3'
-            y2='10.083'
-        ></line>
-        <polygon
-            fill='none'
-            points='11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334'
-            stroke='currentColor'
-            strokeLinejoin='round'
-            strokeWidth='2'
-        ></polygon>
-    </svg>
+            aria-label='Share'
+            color=''
+            fill='rgb(243, 245, 247)'
+            height='20'
+            role='img'
+            viewBox='0 0 24 24'
+            width='20'
+        >
+            <title>Share</title>
+            <line
+                fill='none'
+                stroke='currentColor'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                x1='22'
+                x2='9.218'
+                y1='3'
+                y2='10.083'
+            ></line>
+            <polygon
+                fill='none'
+                points='11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334'
+                stroke='currentColor'
+                strokeLinejoin='round'
+                strokeWidth='2'
+            ></polygon>
+        </svg>
     )
 }
