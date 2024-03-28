@@ -83,7 +83,7 @@ function UserPage() {
 
       {
         posts && posts.map((post) =>(
-          <Post key={post._id} post={post} postedBy={post.postedBy}/>
+          <Post key={post._id} post={post} postedBy={post.postedBy} setPosts={setPosts}/>
         ))
       }
       {/* <UserPost Likes={1200} Replies={481} postImg="/post1.png" postTitle="Let's talk about threads"/>

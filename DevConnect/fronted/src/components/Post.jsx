@@ -9,7 +9,7 @@ import {DeleteIcon} from "@chakra-ui/icons"
 import { useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 
-const Post = ({ post, postedBy }) => {
+const Post = ({ post, postedBy,setPosts }) => {
 
     const [liked, setLiked] = useState(false)
     const showToast = useShowToast();
@@ -58,7 +58,8 @@ const Post = ({ post, postedBy }) => {
                 return;
             }
             showToast("Success","Post Deleted Succesfully","success");
-
+           // For instant reload after deleting a post we will filter those post from set of all available post where there id is not equal to given post
+           setPosts((prev) => prev.filter((thosePost) => thosePost._id  !== post._id));
 
             
         } catch (error) {
