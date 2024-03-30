@@ -17,7 +17,7 @@ import { CreatePost } from './components/CreatePost';
 
 function App() {
 
-  const  user = useRecoilValue(userAtom);
+  const  user = useRecoilValue(userAtom); // get the current User
 
   return (
 
