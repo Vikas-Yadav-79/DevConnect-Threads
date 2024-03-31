@@ -3,6 +3,7 @@ import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import { FiLogOut } from "react-icons/fi";
+import {useColorModeValue} from "@chakra-ui/react"
 
 const LogoutButton = () => {
 	const setUser = useSetRecoilState(userAtom);
@@ -30,7 +31,7 @@ const LogoutButton = () => {
 		}
 	};
 	return (
-		<Button position={"fixed"} top={"30px"} right={"30px"} size={"sm"} onClick={handleLogout}>
+		<Button position={"fixed"}  bottom={3} left={3} size={{ base: "sm", sm: "md" }} bg={useColorModeValue("gray.200", "gray.dark")} onClick={handleLogout}>
 			<FiLogOut size={20} />
 		</Button>
 	);
