@@ -71,8 +71,9 @@ import userAtom from '../atoms/userAtom'
        
         align={'center'}
         justify={'center'}
+       
         >
-        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack spacing={8} mx={'auto'} maxW={{ base: '90%', md: '80%', lg: '50%' }} py={12} px={6}>
           <Box
             rounded={'lg'}
             bg={useColorModeValue('white', 'gray.dark')}
@@ -83,7 +84,7 @@ import userAtom from '../atoms/userAtom'
                 sm:'400px'
             }}>
             <Stack spacing={4}>
-              <FormControl id="email" isRequired>
+              <FormControl id="usernaame" isRequired>
                 <FormLabel>Username</FormLabel>
                 <Input type="text" 
                 onChange={

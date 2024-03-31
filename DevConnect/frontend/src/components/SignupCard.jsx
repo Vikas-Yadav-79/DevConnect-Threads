@@ -62,7 +62,7 @@ export default function SignupCard() {
       setUser(data)
     }
     catch(err){
-      showToast("Error",error,"error")
+      showToast("Error",err,"error")
     }
   }
 

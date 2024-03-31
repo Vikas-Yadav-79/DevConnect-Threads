@@ -13,7 +13,7 @@ function Header() {
 
     return (
 
-        <Flex justifyContent={"space-between"} mt={6} mb='12'>
+        <Flex justifyContent={user ? 'space-between' : 'center'} mt={6} mb='12'>
 
             {
                 user &&  (

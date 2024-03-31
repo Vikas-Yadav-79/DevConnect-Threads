@@ -97,8 +97,8 @@ export const CreatePost = () => {
 
     return (
         <>
-            <Button onClick={onOpen} position={"fixed"} bottom={10} right={5} bg={useColorModeValue("gray.300", "gray.dark")} size={{ base: "sm", sm: "md" }}>
-                <AddIcon />
+            <Button onClick={onOpen} position={"fixed"} bottom={3} right={3} bg={useColorModeValue("gray.200", "gray.dark")} size={{ base: "sm", sm: "md" }}>
+                <AddIcon size={20}/>
             </Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
