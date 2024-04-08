@@ -97,7 +97,7 @@ export const CreatePost = () => {
 
     return (
         <>
-            <Button onClick={onOpen} position={"fixed"} bottom={3} right={3} bg={useColorModeValue("gray.200", "gray.dark")} size={{ base: "sm", sm: "md" }}>
+            <Button onClick={onOpen} position={"fixed"} bottom={3} right={3}  bg={useColorModeValue("gray.200", "gray.dark")} size={{ base: "sm", sm: "md" }}>
                 <AddIcon size={20}/>
             </Button>
 
@@ -153,7 +153,7 @@ export const CreatePost = () => {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={handleCreatePost} isLoading={loading}>
+                        <Button colorScheme='blue'  mr={3} onClick={handleCreatePost} isLoading={loading}>
                             Post
                         </Button>
                     </ModalFooter>
