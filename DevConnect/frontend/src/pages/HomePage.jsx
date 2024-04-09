@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useShowToast from '../hooks/useShowToast'
 import Post from '../components/Post';
+import  {Search}  from '../components/Search';
 
 export default function HomePage() {
 
@@ -56,6 +57,7 @@ export default function HomePage() {
           <Post key={post._id} post={post} postedBy={post.postedBy}/>
         ))
       }
+      <Search/>
 
     </>
   )

@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SearchIcon } from '@chakra-ui/icons'
 
-import { IconButton, Button, Modal, Input,useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl } from '@chakra-ui/react'
+import { IconButton, Button, Modal, Input, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl } from '@chakra-ui/react'
 import useShowToast from '../hooks/useShowToast';
+import { Allusers } from './Allusers';
 
 
 export const Search = () => {
@@ -11,6 +12,7 @@ export const Search = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(false)
+    const [users, setUsers] = useState([]);
     const showToast = useShowToast()
 
     const handleSearchClick = () => {
@@ -33,7 +35,7 @@ export const Search = () => {
             window.location.href = newUrl;
 
         } catch (error) {
-            showToast("Error",error,'error')
+            showToast("Error", error, 'error')
         }
         finally {
             setLoading(false)
@@ -42,12 +44,33 @@ export const Search = () => {
     const handleInputChange = (e) => {
         setUsername(e.target.value);
     }
+
+    useEffect(() => {
+
+        const getallUsers = async () => {
+            try {
+                const res = await fetch("/api/users/getall")
+                const data = await res.json()
+                if (data.error) {
+                    showToast("Error", data.error, 'error')
+                    return;
+                }
+                setUsers(data);
+                console.log(data)
+
+            } catch (error) {
+                showToast("Error", error, 'error')
+
+            }
+
+        }
+        getallUsers();
+
+    }, [showToast])
+
     return (
-        // <Button position={"fixed"}  bottom={3} left={3} size={{ base: "sm", sm: "md" }} bg={useColorModeValue("gray.200", "gray.dark")} onClick={handleLogout}>
-        // 		<FiLogOut size={20} />
-        // 	</Button>
         <>
-            <IconButton  position={'fixed'} bottom={3} left={'50%'} transform={"translateX(-50%)"}  icon={<SearchIcon />} size={{ base: "sm", sm: "md" }} bg={useColorModeValue("gray.200", "gray.dark")}  onClick={handleSearchClick} />
+            <IconButton position={'fixed'} bottom={3} left={'50%'} transform={"translateX(-50%)"} icon={<SearchIcon />} size={{ base: "sm", sm: "md" }} bg={useColorModeValue("gray.200", "gray.dark")} onClick={handleSearchClick} />
 
             <Modal isOpen={isOpen} onClose={handleModalClose} >
                 <ModalOverlay />
@@ -57,6 +80,9 @@ export const Search = () => {
                     <ModalBody>
                         <FormControl>
                             <Input type="text" placeholder="Username" value={username} onChange={handleInputChange} />
+                            <Allusers />
+
+
 
                         </FormControl>
 
@@ -66,9 +92,6 @@ export const Search = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-
-
-
         </>
 
 

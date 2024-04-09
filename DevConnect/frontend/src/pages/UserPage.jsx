@@ -30,7 +30,7 @@ function UserPage() {
         const res = await fetch(`/api/posts/user/${username}`)
         const data = await res.json()
         if(data.error){
-          showToast("Error" , data.error,"error")
+          showToast("Error" ,data.error,"error")
           return;
 
         }
