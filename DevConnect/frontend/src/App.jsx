@@ -35,7 +35,7 @@ function App() {
 
         {user && <LogoutButton />}
         {user && <CreatePost />}
-        <Search />
+        {/* <Search /> */}
         
 
 

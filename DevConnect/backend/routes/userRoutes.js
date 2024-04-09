@@ -1,5 +1,5 @@
 const express = require('express');
-const {signUpUser,loginUser,logoutUser,followUnFollowUser,updateUser,getUserProfile} = require('../controllers/userController');
+const {signUpUser,loginUser,logoutUser,followUnFollowUser,updateUser,getUserProfile,getallUser} = require('../controllers/userController');
 const protectRoute = require('../middleware/protectRoute');
 
 
@@ -13,6 +13,7 @@ router.post('/signup', signUpUser)
 router.post('/login', loginUser)
 
 router.post('/logout',logoutUser)
+router.get('/getall',getallUser)
 
 router.post('/follow/:id',protectRoute,followUnFollowUser)
 

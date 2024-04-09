@@ -241,6 +241,21 @@ const getUserProfile = async(req,res) =>{
 
     }
 
+};
+
+const getallUser = async(req,res) =>{
+
+    try {
+        const all_user = await User.find({},'username profilePic')
+        res.json(all_user);
+
+        
+    } catch (err) {
+        res.status(500).json({error:err.message})
+        console.log("Erro While fetching all users ! " + err.message);
+        
+    }
+
 }
 
 module.exports = {
@@ -249,5 +264,6 @@ module.exports = {
     logoutUser,
     followUnFollowUser,
     updateUser,
-    getUserProfile
+    getUserProfile,
+    getallUser
 };
