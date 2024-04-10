@@ -1,6 +1,5 @@
 import { Avatar, Flex, Box, Text, Image } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { BsThreeDots } from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom'
 import Actions from './Actions'
 import useShowToast from '../hooks/useShowToast'

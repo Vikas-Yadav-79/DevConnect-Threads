@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { SearchIcon } from '@chakra-ui/icons'
 
-import { IconButton, Button, Modal, Input, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl } from '@chakra-ui/react'
+import { IconButton, Button, Modal, Input, useColorModeValue,Text, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl,Box } from '@chakra-ui/react'
 import useShowToast from '../hooks/useShowToast';
 import { Allusers } from './Allusers';
 
@@ -80,8 +80,27 @@ export const Search = () => {
                     <ModalBody>
                         <FormControl>
                             <Input type="text" placeholder="Username" value={username} onChange={handleInputChange} />
-                            <Allusers />
 
+                            <Box>
+                                <Text p={1} mt={1}textAlign={'center'} fontSize={'large'} fontWeight={'bold'}>List  of all users </Text>
+                            </Box>
+
+
+                            <Box mt={3}>
+                            {
+                                users && users.map((user) => (
+
+                                    <Allusers key={user._id} user={user} />
+
+
+
+                                ))
+                            }
+
+
+                            </Box>
+
+                           
 
 
                         </FormControl>
